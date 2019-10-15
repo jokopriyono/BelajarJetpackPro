@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jo.belajarjetpackpro.R
 import com.jo.belajarjetpackpro.data.CourseEntity
-import com.jo.belajarjetpackpro.utils.DataDummy
 import kotlinx.android.synthetic.main.fragment_bookmark.*
 
 /**
@@ -28,8 +28,7 @@ class BookmarkFragment : Fragment(), BookmarkFragmentCallback {
     }
 
     private lateinit var bookmarkAdapter: BookmarkAdapter
-
-    fun newInstance(): Fragment = BookmarkFragment()
+    private lateinit var bookmarkViewModel: BookmarkViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_bookmark, container, false)
@@ -38,8 +37,10 @@ class BookmarkFragment : Fragment(), BookmarkFragmentCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let {
+            bookmarkViewModel = ViewModelProviders.of(this).get(BookmarkViewModel::class.java)
+
             bookmarkAdapter = BookmarkAdapter(it, this)
-            bookmarkAdapter.courses = DataDummy.generateDummyCourses()
+            bookmarkAdapter.courses = bookmarkViewModel.getBookmarks()
 
             rv_bookmark.layoutManager = LinearLayoutManager(it)
             rv_bookmark.setHasFixedSize(true)

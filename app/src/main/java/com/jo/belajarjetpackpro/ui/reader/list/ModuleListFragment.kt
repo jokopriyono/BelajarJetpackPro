@@ -8,12 +8,14 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jo.belajarjetpackpro.R
 import com.jo.belajarjetpackpro.data.ModuleEntity
 import com.jo.belajarjetpackpro.ui.reader.CourseReaderActivity
 import com.jo.belajarjetpackpro.ui.reader.CourseReaderCallback
+import com.jo.belajarjetpackpro.ui.reader.CourseReaderViewModel
 import com.jo.belajarjetpackpro.utils.DataDummy
 import kotlinx.android.synthetic.main.fragment_module_list.*
 
@@ -33,6 +35,7 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
 
     private lateinit var moduleListAdapter: ModuleListAdapter
     private lateinit var courseReaderCallback: CourseReaderCallback
+    private lateinit var viewModel: CourseReaderViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_module_list, container, false)
@@ -41,6 +44,7 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let {
+            viewModel = ViewModelProviders.of(it).get(CourseReaderViewModel::class.java)
             moduleListAdapter = ModuleListAdapter(this)
             populateRecyclerView(DataDummy.generateDummyModules("a14"))
         }
@@ -65,5 +69,6 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
 
     override fun onItemClicked(position: Int, moduleId: String) {
         courseReaderCallback.moveTo(position, moduleId)
+        viewModel.moduleId = moduleId
     }
 }

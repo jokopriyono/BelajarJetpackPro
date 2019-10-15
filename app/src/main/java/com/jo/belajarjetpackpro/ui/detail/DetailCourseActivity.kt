@@ -3,6 +3,7 @@ package com.jo.belajarjetpackpro.ui.detail
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -19,10 +20,13 @@ class DetailCourseActivity : AppCompatActivity() {
     }
 
     private lateinit var detailCourseAdapter: DetailCourseAdapter
+    private lateinit var viewModel: DetailCourseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_course)
+
+        viewModel = ViewModelProviders.of(this).get(DetailCourseViewModel::class.java)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -32,6 +36,7 @@ class DetailCourseActivity : AppCompatActivity() {
         intent.extras?.let {
             val courseId = it.getString(EXTRA_COURSE)
             courseId?.let { id ->
+                viewModel.courseId = id
                 detailCourseAdapter.mModules = DataDummy.generateDummyModules(id)
 
                 populateCourse(id)
@@ -61,7 +66,7 @@ class DetailCourseActivity : AppCompatActivity() {
 
         btn_start.setOnClickListener {
             val intent = Intent(this@DetailCourseActivity, CourseReaderActivity::class.java)
-            intent.putExtra(CourseReaderActivity.EXTRA_COURSE_ID, courseId)
+            intent.putExtra(CourseReaderActivity.EXTRA_COURSE_ID, viewModel.courseId)
             startActivity(intent)
         }
     }
