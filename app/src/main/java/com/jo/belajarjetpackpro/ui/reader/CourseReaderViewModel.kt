@@ -9,7 +9,7 @@ class CourseReaderViewModel : ViewModel() {
     var courseId = ""
     var moduleId = ""
 
-    private fun getModules(): ArrayList<ModuleEntity> = DataDummy.generateDummyModules(courseId)
+    fun getModules(): ArrayList<ModuleEntity> = DataDummy.generateDummyModules(courseId)
 
     fun getSelectedModule(): ModuleEntity? {
         var module: ModuleEntity? = null
