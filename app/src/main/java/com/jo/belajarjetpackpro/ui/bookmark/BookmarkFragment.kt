@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jo.belajarjetpackpro.R
 import com.jo.belajarjetpackpro.data.CourseEntity
+import com.jo.belajarjetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_bookmark.*
 
 /**
@@ -37,7 +39,7 @@ class BookmarkFragment : Fragment(), BookmarkFragmentCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let {
-            bookmarkViewModel = ViewModelProviders.of(this).get(BookmarkViewModel::class.java)
+            bookmarkViewModel = obtainViewModel(it)
 
             bookmarkAdapter = BookmarkAdapter(it, this)
             bookmarkAdapter.courses = bookmarkViewModel.getBookmarks()
@@ -46,6 +48,13 @@ class BookmarkFragment : Fragment(), BookmarkFragmentCallback {
             rv_bookmark.setHasFixedSize(true)
             rv_bookmark.adapter = bookmarkAdapter
         }
+    }
+
+    private fun obtainViewModel(activity: FragmentActivity): BookmarkViewModel {
+        // Use a Factory to inject dependencies into the ViewModel
+        val factory = ViewModelFactory.getInstance(activity.application)
+        return ViewModelProviders.of(activity, factory)
+            .get<BookmarkViewModel>(BookmarkViewModel::class.java)
     }
 
     override fun onShareClick(courseEntity: CourseEntity) {

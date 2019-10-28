@@ -82,3 +82,7 @@ dependencies {
     // Dependencies for Idle Resource
     implementation "androidx.test.espresso:espresso-idling-resource:$idleResourceVersion"
 }
+
+androidExtensions {
+    experimental = true
+}

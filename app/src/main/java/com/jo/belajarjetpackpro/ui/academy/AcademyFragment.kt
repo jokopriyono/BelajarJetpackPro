@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jo.belajarjetpackpro.R
+import com.jo.belajarjetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_academy.*
 
 class AcademyFragment : Fragment() {
@@ -32,7 +34,8 @@ class AcademyFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let {
-            academyViewModel = ViewModelProviders.of(this).get(AcademyViewModel::class.java)
+            academyViewModel = obtainViewModel(it)
+//            academyViewModel = ViewModelProviders.of(this).get(AcademyViewModel::class.java)
 
             academyAdapter = AcademyAdapter(it)
             academyAdapter.mCourses = academyViewModel.getCourses()
@@ -41,5 +44,11 @@ class AcademyFragment : Fragment() {
             rv_academy.setHasFixedSize(true)
             rv_academy.adapter = academyAdapter
         }
+    }
+
+    private fun obtainViewModel(activity: FragmentActivity): AcademyViewModel {
+        // Use a Factory to inject dependencies into the ViewModel
+        val factory = ViewModelFactory.getInstance(activity.application)
+        return ViewModelProviders.of(activity, factory).get(AcademyViewModel::class.java)
     }
 }

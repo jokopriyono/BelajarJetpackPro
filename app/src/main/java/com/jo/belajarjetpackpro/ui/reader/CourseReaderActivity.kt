@@ -2,10 +2,12 @@ package com.jo.belajarjetpackpro.ui.reader
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import com.jo.belajarjetpackpro.R
 import com.jo.belajarjetpackpro.ui.reader.content.ModuleContentFragment
 import com.jo.belajarjetpackpro.ui.reader.list.ModuleListFragment
+import com.jo.belajarjetpackpro.viewmodel.ViewModelFactory
 
 class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
     companion object {
@@ -18,7 +20,7 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_reader)
 
-        viewModel = ViewModelProviders.of(this).get(CourseReaderViewModel::class.java)
+        viewModel = obtainViewModel(this)
 
         intent.extras?.let {
             val courseId = it.getString(EXTRA_COURSE_ID)
@@ -27,6 +29,12 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
                 populateFragment()
             }
         }
+    }
+
+    private fun obtainViewModel(activity: FragmentActivity): CourseReaderViewModel {
+        // Use a Factory to inject dependencies into the ViewModel
+        val factory = ViewModelFactory.getInstance(activity.application)
+        return ViewModelProviders.of(activity, factory).get(CourseReaderViewModel::class.java)
     }
 
     private fun populateFragment() {

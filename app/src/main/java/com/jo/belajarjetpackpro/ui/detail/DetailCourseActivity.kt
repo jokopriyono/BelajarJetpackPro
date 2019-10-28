@@ -3,6 +3,7 @@ package com.jo.belajarjetpackpro.ui.detail
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.jo.belajarjetpackpro.R
 import com.jo.belajarjetpackpro.ui.reader.CourseReaderActivity
 import com.jo.belajarjetpackpro.utils.DataDummy
+import com.jo.belajarjetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_detail_course.*
 import kotlinx.android.synthetic.main.content_detail_course.*
 
@@ -26,7 +28,7 @@ class DetailCourseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_course)
 
-        viewModel = ViewModelProviders.of(this).get(DetailCourseViewModel::class.java)
+        viewModel = obtainViewModel(this)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -50,6 +52,12 @@ class DetailCourseActivity : AppCompatActivity() {
         val dividerItemDecoration = DividerItemDecoration(rv_module.context, DividerItemDecoration.VERTICAL)
         rv_module.addItemDecoration(dividerItemDecoration)
 
+    }
+
+    private fun obtainViewModel(activity: FragmentActivity): DetailCourseViewModel {
+        // Use a Factory to inject dependencies into the ViewModel
+        val factory = ViewModelFactory.getInstance(activity.application)
+        return ViewModelProviders.of(activity, factory).get(DetailCourseViewModel::class.java)
     }
 
     private fun populateCourse(courseId: String) {
