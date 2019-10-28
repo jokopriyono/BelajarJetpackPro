@@ -7,7 +7,6 @@ import com.jo.belajarjetpackpro.data.source.AcademyRepository
 
 class DetailCourseViewModel(private val academyRepository: AcademyRepository) : ViewModel() {
 
-    private lateinit var mCourse: CourseEntity
     var courseId: String = ""
 
     fun getCourse(): CourseEntity? = academyRepository.getCourseWithModules(courseId)

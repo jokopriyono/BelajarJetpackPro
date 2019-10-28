@@ -42,7 +42,9 @@ class BookmarkFragment : Fragment(), BookmarkFragmentCallback {
             bookmarkViewModel = obtainViewModel(it)
 
             bookmarkAdapter = BookmarkAdapter(it, this)
-            bookmarkAdapter.courses = bookmarkViewModel.getBookmarks()
+            val courses = arrayListOf<CourseEntity>()
+            courses.addAll(bookmarkViewModel.getBookmarks())
+            bookmarkAdapter.courses = courses
 
             rv_bookmark.layoutManager = LinearLayoutManager(it)
             rv_bookmark.setHasFixedSize(true)

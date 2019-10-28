@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jo.belajarjetpackpro.R
+import com.jo.belajarjetpackpro.data.CourseEntity
 import com.jo.belajarjetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_academy.*
 
@@ -38,7 +39,9 @@ class AcademyFragment : Fragment() {
 //            academyViewModel = ViewModelProviders.of(this).get(AcademyViewModel::class.java)
 
             academyAdapter = AcademyAdapter(it)
-            academyAdapter.mCourses = academyViewModel.getCourses()
+            val courses = arrayListOf<CourseEntity>()
+            courses.addAll(academyViewModel.getCourses())
+            academyAdapter.mCourses = courses
 
             rv_academy.layoutManager = LinearLayoutManager(it)
             rv_academy.setHasFixedSize(true)
