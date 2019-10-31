@@ -9,6 +9,7 @@ import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +18,6 @@ import com.jo.belajarjetpackpro.data.ModuleEntity
 import com.jo.belajarjetpackpro.ui.reader.CourseReaderActivity
 import com.jo.belajarjetpackpro.ui.reader.CourseReaderCallback
 import com.jo.belajarjetpackpro.ui.reader.CourseReaderViewModel
-import com.jo.belajarjetpackpro.utils.DataDummy
 import com.jo.belajarjetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_module_list.*
 
@@ -48,7 +48,10 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
         activity?.let {
             viewModel = obtainViewModel(it)
             moduleListAdapter = ModuleListAdapter(this)
-            populateRecyclerView(DataDummy.generateDummyModules("a14"))
+            viewModel.getModules().observe(this, Observer { modules ->
+                progress_bar.visibility = GONE
+                populateRecyclerView(modules)
+            })
         }
     }
 
@@ -62,9 +65,10 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
         courseReaderCallback = context as CourseReaderActivity
     }
 
-    private fun populateRecyclerView(generateDummyModules: ArrayList<ModuleEntity>) {
+    private fun populateRecyclerView(generateDummyModules: List<ModuleEntity>) {
         progress_bar.visibility = GONE
-        moduleListAdapter.modules = generateDummyModules
+        moduleListAdapter.modules.clear()
+        moduleListAdapter.modules.addAll(generateDummyModules)
 
         rv_module.layoutManager = LinearLayoutManager(context)
         rv_module.setHasFixedSize(true)

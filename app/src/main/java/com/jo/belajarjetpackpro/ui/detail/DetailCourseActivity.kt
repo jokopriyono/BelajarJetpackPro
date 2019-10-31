@@ -2,8 +2,11 @@ package com.jo.belajarjetpackpro.ui.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,12 +41,27 @@ class DetailCourseActivity : AppCompatActivity() {
         intent.extras?.let {
             val courseId = it.getString(EXTRA_COURSE)
             courseId?.let { id ->
+                progress_bar.visibility = VISIBLE
                 viewModel.courseId = id
+                /*viewModel.courseId = id
                 detailCourseAdapter.mModules = DataDummy.generateDummyModules(id)
 
-                populateCourse(id)
+                populateCourse(id)*/
             }
         }
+
+        viewModel.getModules().observe(this, Observer {
+            progress_bar.visibility = GONE
+            detailCourseAdapter.mModules.clear()
+            detailCourseAdapter.mModules.addAll(it)
+            detailCourseAdapter.notifyDataSetChanged()
+        })
+
+        viewModel.getCourse().observe(this, Observer {
+            it?.let {
+                populateCourse(it.courseId)
+            }
+        })
 
         rv_module.isNestedScrollingEnabled = false
         rv_module.layoutManager = LinearLayoutManager(this)

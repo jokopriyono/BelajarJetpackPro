@@ -4,13 +4,14 @@ package com.jo.belajarjetpackpro.ui.academy
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jo.belajarjetpackpro.R
-import com.jo.belajarjetpackpro.data.CourseEntity
 import com.jo.belajarjetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_academy.*
 
@@ -36,12 +37,15 @@ class AcademyFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         activity?.let {
             academyViewModel = obtainViewModel(it)
-//            academyViewModel = ViewModelProviders.of(this).get(AcademyViewModel::class.java)
 
             academyAdapter = AcademyAdapter(it)
-            val courses = arrayListOf<CourseEntity>()
-            courses.addAll(academyViewModel.getCourses())
-            academyAdapter.mCourses = courses
+
+            academyViewModel.getCourses().observe(this, Observer { courses ->
+                progress_bar.visibility = GONE
+                academyAdapter.mCourses.clear()
+                academyAdapter.mCourses.addAll(courses)
+                academyAdapter.notifyDataSetChanged()
+            })
 
             rv_academy.layoutManager = LinearLayoutManager(it)
             rv_academy.setHasFixedSize(true)

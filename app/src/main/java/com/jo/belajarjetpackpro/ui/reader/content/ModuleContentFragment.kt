@@ -4,9 +4,12 @@ package com.jo.belajarjetpackpro.ui.reader.content
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.jo.belajarjetpackpro.R
 import com.jo.belajarjetpackpro.data.ModuleEntity
@@ -37,9 +40,11 @@ class ModuleContentFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         activity?.let {
             viewModel = obtainViewModel(it)
-            val module = viewModel.getSelectedModule()
-
-            populateWebView(module)
+            progress_bar.visibility = VISIBLE
+            viewModel.getSelectedModule().observe(this, Observer { module ->
+                progress_bar.visibility = GONE
+                populateWebView(module)
+            })
         }
     }
 
