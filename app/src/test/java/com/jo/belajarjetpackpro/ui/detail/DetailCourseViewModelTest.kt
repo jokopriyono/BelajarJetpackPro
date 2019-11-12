@@ -1,20 +1,28 @@
 package com.jo.belajarjetpackpro.ui.detail
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.jo.belajarjetpackpro.data.CourseEntity
+import com.jo.belajarjetpackpro.data.ModuleEntity
 import com.jo.belajarjetpackpro.data.source.AcademyRepository
 import com.jo.belajarjetpackpro.utils.FakeDataDummyy
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import com.jo.belajarjetpackpro.utils.mock
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.*
 
+
 class DetailCourseViewModelTest {
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var detailCourseViewModel: DetailCourseViewModel
     private val academyRepository = mock(AcademyRepository::class.java)
     private val dummyCourse: CourseEntity = FakeDataDummyy.generateDummyCourses()[0]
     private val courseId = dummyCourse.courseId
+    private val dummyModules = FakeDataDummyy.generateDummyModules(courseId)
 
     @Before
     fun setUp() {
@@ -24,23 +32,21 @@ class DetailCourseViewModelTest {
 
     @Test
     fun getCourse() {
-        `when`(academyRepository.getCourseWithModules(courseId)).thenReturn(dummyCourse)
-        val course = detailCourseViewModel.getCourse()
-        verify(academyRepository).getCourseWithModules(courseId)
-        assertNotNull(course)
-        val courseId = course?.courseId
-        assertNotNull(courseId)
-        assertEquals(dummyCourse.courseId, courseId)
+        val courseEntities = MutableLiveData<CourseEntity>()
+        courseEntities.value = dummyCourse
+        `when`(academyRepository.getCourseWithModules(courseId)).thenReturn(courseEntities)
+        val observer: Observer<CourseEntity?> = mock()
+        detailCourseViewModel.getCourse().observeForever(observer)
+        verify(observer).onChanged(dummyCourse)
     }
 
     @Test
     fun getModules() {
-        `when`(academyRepository.getAllModulesByCourse(courseId)).thenReturn(
-            FakeDataDummyy.generateDummyModules(courseId)
-        )
-        val moduleEntities = detailCourseViewModel.getModules()
-        verify(academyRepository).getAllModulesByCourse(courseId)
-        assertNotNull(moduleEntities)
-        assertEquals(7, moduleEntities.size)
+        val moduleEntities = MutableLiveData<List<ModuleEntity>>()
+        moduleEntities.value = dummyModules
+        `when`(academyRepository.getAllModulesByCourse(courseId)).thenReturn(moduleEntities)
+        val observer: Observer<List<ModuleEntity>> = mock()
+        detailCourseViewModel.getModules().observeForever(observer)
+        verify(observer).onChanged(dummyModules)
     }
 }
