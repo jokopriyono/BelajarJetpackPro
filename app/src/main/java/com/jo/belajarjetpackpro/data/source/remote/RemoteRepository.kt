@@ -10,7 +10,7 @@ import com.jo.belajarjetpackpro.utils.JsonHelper
 class RemoteRepository(private val jsonHelper: JsonHelper) {
     companion object {
         private var remoteRepository: RemoteRepository? = null
-        private const val SERVICE_LATENCY_IN_MILLIS = 2000L
+        const val SERVICE_LATENCY_IN_MILLIS = 2000L
 
         fun getInstance(helper: JsonHelper): RemoteRepository {
             if (remoteRepository == null)

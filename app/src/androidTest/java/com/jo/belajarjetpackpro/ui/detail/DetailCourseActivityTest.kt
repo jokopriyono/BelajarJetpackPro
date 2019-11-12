@@ -29,6 +29,7 @@ class DetailCourseActivityTest {
 
     @Test
     fun loadCourse() {
+        Thread.sleep(3000)
         onView(withId(R.id.text_title)).check(matches(isDisplayed()))
         onView(withId(R.id.text_title)).check(matches(withText(dummyCourse.title)))
         onView(withId(R.id.text_date)).check(matches(isDisplayed()))
@@ -46,6 +47,7 @@ class DetailCourseActivityTest {
 
     @Test
     fun loadModules() {
+        Thread.sleep(3000)
         onView(withId(R.id.rv_module)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_module)).check(RecyclerViewItemCountAssertion(7))
     }
