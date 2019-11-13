@@ -4,6 +4,7 @@ import android.os.Handler
 import com.jo.belajarjetpackpro.data.source.remote.response.ContentResponse
 import com.jo.belajarjetpackpro.data.source.remote.response.CourseResponse
 import com.jo.belajarjetpackpro.data.source.remote.response.ModuleResponse
+import com.jo.belajarjetpackpro.utils.EspressoIdlingResource
 import com.jo.belajarjetpackpro.utils.JsonHelper
 
 
@@ -20,26 +21,35 @@ class RemoteRepository(private val jsonHelper: JsonHelper) {
     }
 
     fun getAllCourses(callback: LoadCoursesCallback) {
+        EspressoIdlingResource.increment()
         val handler = Handler()
         handler.postDelayed(
-            { callback.onAllCoursesReceived(jsonHelper.loadCourses()) },
-            SERVICE_LATENCY_IN_MILLIS
+            {
+                callback.onAllCoursesReceived(jsonHelper.loadCourses())
+                EspressoIdlingResource.decrement()
+            }, SERVICE_LATENCY_IN_MILLIS
         )
     }
 
     fun getModules(courseId: String, callback: LoadModulesCallback) {
+        EspressoIdlingResource.increment()
         val handler = Handler()
         handler.postDelayed(
-            { callback.onAllModulesReceived(jsonHelper.loadModule(courseId)) },
-            SERVICE_LATENCY_IN_MILLIS
+            {
+                callback.onAllModulesReceived(jsonHelper.loadModule(courseId))
+                EspressoIdlingResource.decrement()
+            }, SERVICE_LATENCY_IN_MILLIS
         )
     }
 
     fun getContent(moduleId: String, callback: GetContentCallback) {
+        EspressoIdlingResource.increment()
         val handler = Handler()
         handler.postDelayed(
-            { callback.onContentReceived(jsonHelper.loadContent(moduleId)) },
-            SERVICE_LATENCY_IN_MILLIS
+            {
+                callback.onContentReceived(jsonHelper.loadContent(moduleId))
+                EspressoIdlingResource.decrement()
+            }, SERVICE_LATENCY_IN_MILLIS
         )
     }
 
